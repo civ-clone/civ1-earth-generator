@@ -1,21 +1,4 @@
-import {
-  American,
-  Aztec,
-  Babylonian,
-  Chinese,
-  Egyptian,
-  English,
-  French,
-  German,
-  Greek,
-  Indian,
-  Mongol,
-  Roman,
-  Russian,
-  Zulu,
-} from '@civ-clone/civ1-civilization/Civilizations';
 import Arctic from '@civ-clone/base-terrain-arctic/Arctic';
-import Civilization from '@civ-clone/core-civilization/Civilization';
 import Desert from '@civ-clone/base-terrain-desert/Desert';
 import Forest from '@civ-clone/base-terrain-forest/Forest';
 import Generator from '@civ-clone/core-world-generator/Generator';
@@ -29,7 +12,6 @@ import River from '@civ-clone/base-terrain-river/River';
 import Swamp from '@civ-clone/base-terrain-swamp/Swamp';
 import Terrain from '@civ-clone/core-terrain/Terrain';
 import Tundra from '@civ-clone/base-terrain-tundra/Tundra';
-import World from '@civ-clone/core-world/World';
 
 type StringTerrain =
   | 'A'
@@ -60,45 +42,6 @@ const terrainLookup: TerrainLookup = {
   R: River,
   S: Swamp,
   T: Tundra,
-};
-
-type Coordinates = {
-  x: number;
-  y: number;
-};
-
-const startTileCoordinatesByCivilizationType = new Map<
-  typeof Civilization,
-  Coordinates
->();
-
-(
-  [
-    [American, { x: 12, y: 18 }],
-    [Aztec, { x: 5, y: 23 }],
-    [Babylonian, { x: 45, y: 22 }],
-    [Chinese, { x: 67, y: 19 }],
-    [Egyptian, { x: 41, y: 24 }],
-    [English, { x: 31, y: 14 }],
-    [French, { x: 33, y: 16 }],
-    [German, { x: 38, y: 15 }],
-    [Greek, { x: 39, y: 18 }],
-    [Indian, { x: 57, y: 26 }],
-    [Mongol, { x: 49, y: 19 }],
-    [Roman, { x: 36, y: 19 }],
-    [Russian, { x: 44, y: 12 }],
-    [Zulu, { x: 42, y: 42 }],
-  ] as [typeof Civilization, Coordinates][]
-).forEach(([CivilizationType, coordinates]) =>
-  startTileCoordinatesByCivilizationType.set(CivilizationType, coordinates)
-);
-
-export const startSquare = (world: World, civilization: Civilization) => {
-  const { x, y } = startTileCoordinatesByCivilizationType.get(
-    civilization.sourceClass()
-  )!;
-
-  return world.get(x, y);
 };
 
 export class Earth extends Generator {

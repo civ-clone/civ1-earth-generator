@@ -13,6 +13,6 @@ const map = new Map_1.default();
 map.fromString((0, fs_1.readFileSync)('MAP.PIC', {
     encoding: 'binary',
 }), 
-// We remove the
+// We remove the `TerrainFeature`s as these are randomised on build via the `Created` `Rule`s.
 () => console.log(map.getTerrainMap().replace(/[a-z]/g, '')));
 //# sourceMappingURL=generateEarthMap.js.map

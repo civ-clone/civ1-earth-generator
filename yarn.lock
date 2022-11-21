@@ -261,7 +261,7 @@
     "@civ-clone/core-rule" "^0.1.0"
     "@civ-clone/core-world" "^0.1.10"
 
-"@civ-clone/core-registry@^0.1.0":
+"@civ-clone/core-registry@^0.1.0", "@civ-clone/core-registry@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@civ-clone/core-registry/-/core-registry-0.1.1.tgz#397fcd926d2809e98638e9d259150ccddd54b2fd"
   integrity sha512-QmeffB0fmNLjIQMAgiZBQugOqWhOzgDpzgKB4KQtdkMrhjKV0jZw2VfM0mbEyqqem4hrSLsbrLkcA9aJh5NMXw==

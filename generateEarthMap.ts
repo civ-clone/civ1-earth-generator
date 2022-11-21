@@ -15,6 +15,6 @@ map.fromString(
   readFileSync('MAP.PIC', {
     encoding: 'binary',
   }),
-  // We remove the
+  // We remove the `TerrainFeature`s as these are randomised on build via the `Created` `Rule`s.
   () => console.log(map.getTerrainMap().replace(/[a-z]/g, ''))
 );
