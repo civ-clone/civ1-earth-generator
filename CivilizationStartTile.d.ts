@@ -7,7 +7,9 @@ export type Coordinates = {
   y: number;
 };
 export declare class CivilizationStartTile {
-  #private;
+  private _civilizationType;
+  private _mapGenerator;
+  private _startTile;
   constructor(
     CivilizationType: typeof Civilization,
     MapGenerator: typeof Generator,

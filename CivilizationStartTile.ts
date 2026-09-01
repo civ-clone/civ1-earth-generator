@@ -10,34 +10,34 @@ export type Coordinates = {
 
 // TODO: Maybe break this and the `Registry` out into another package when the time comes.
 export class CivilizationStartTile {
-  #civilizationType: typeof Civilization;
-  #mapGenerator: typeof Generator;
-  #startTile: Coordinates;
+  private _civilizationType: typeof Civilization;
+  private _mapGenerator: typeof Generator;
+  private _startTile: Coordinates;
 
   constructor(
     CivilizationType: typeof Civilization,
     MapGenerator: typeof Generator,
     startTile: Coordinates
   ) {
-    this.#civilizationType = CivilizationType;
-    this.#mapGenerator = MapGenerator;
-    this.#startTile = startTile;
+    this._civilizationType = CivilizationType;
+    this._mapGenerator = MapGenerator;
+    this._startTile = startTile;
   }
 
   civilizationType(): typeof Civilization {
-    return this.#civilizationType;
+    return this._civilizationType;
   }
 
   mapGenerator(): typeof Generator {
-    return this.#mapGenerator;
+    return this._mapGenerator;
   }
 
   startTile(): Coordinates {
-    return this.#startTile;
+    return this._startTile;
   }
 
   startTileForMap(world: World): Tile {
-    const { x, y } = this.#startTile;
+    const { x, y } = this._startTile;
 
     return world.get(x, y);
   }
