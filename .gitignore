@@ -209,3 +209,9 @@ GitHub.sublime-settings
 
 # Civ stuff
 MAP.PIC
+# tools/earth-maps: downloaded data, caches and the preview
+tools/earth-maps/ne_50m_land.geojson
+tools/earth-maps/land.bin
+tools/earth-maps/lattice-*.pkl
+tools/earth-maps/preview.png
+__pycache__/
