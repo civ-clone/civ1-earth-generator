@@ -77,18 +77,8 @@ def typescript(width, height, rows, starts):
     return '\n'.join(lines)
 
 
-world = {}
-
-# The original map keeps its terrain; only its start tiles are placed again.
-starts = place(CIV1)
-path = os.path.join('..', '..', 'Maps', 'Earth80x50.ts')
-source = open(path).read()
-source = re.sub(r'  startTiles: \[\n(?:    \[.*\n)+  \],', lambda _: '  startTiles: [\n' + '\n'.join(start_lines(starts)) + '\n  ],', source)
-with open(path, 'w') as file:
-    file.write(source)
-
-panels = [(CIV1, starts)]
-world['80x50'] = {name: list(starts[name]) for name in WORLD_CIVILIZATIONS}
+# Place everything first, so nothing is written unless every map's starts fit.
+maps = [(80, 50, CIV1, place(CIV1), None)]
 
 for width, height in SIZES:
     grid, _, _, added = upscale(width, height)
@@ -98,19 +88,39 @@ for width, height in SIZES:
         grid[y][x] = terrain
 
     rows = [''.join(row) for row in grid]
-    starts = place(rows)
+    maps.append((width, height, rows, place(rows), added))
 
+# The original map keeps its terrain; only its start tiles are placed again.
+path = os.path.join('..', '..', 'Maps', 'Earth80x50.ts')
+source, replaced = re.subn(
+    r'  startTiles: \[\n(?:    \[.*\n)+  \],',
+    lambda _: '  startTiles: [\n' + '\n'.join(start_lines(maps[0][3])) + '\n  ],',
+    open(path).read(),
+)
+
+if replaced != 1:
+    sys.exit(f'Expected one startTiles block in {path}, found {replaced}.')
+
+with open(path, 'w') as file:
+    file.write(source)
+
+for width, height, rows, starts, added in maps[1:]:
     with open(os.path.join('..', '..', 'Maps', f'Earth{width}x{height}.ts'), 'w') as file:
         file.write(typescript(width, height, rows, starts))
 
-    panels.append((rows, starts))
-    world[f'{width}x{height}'] = {name: list(starts[name]) for name in WORLD_CIVILIZATIONS}
     print(f'{width} x {height}: {stats(rows)}')
     print(f'  islands added: {", ".join(f"{name} ({len(tiles)})" for name, tiles in added.items())}')
+
+world = {
+    f'{width}x{height}': {name: list(starts[name]) for name in WORLD_CIVILIZATIONS}
+    for width, height, _, starts, _ in maps
+}
 
 with open('world-civilizations.json', 'w') as file:
     json.dump(world, file, indent=2)
     file.write('\n')
+
+panels = [(rows, starts) for _, _, rows, starts, _ in maps]
 
 # one panel per map, the original first, start tiles in red
 PW, PH, GAP = 896, 560, 12
