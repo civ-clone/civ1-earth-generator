@@ -17,23 +17,24 @@ import {
 import EarthMap from '../EarthMap';
 
 // Civilization's own Earth: `MAP.PIC` converted using `civ1-asset-extractor` (see `generateEarthMap.ts`), without the
-// `TerrainFeature`s, which are added via the `Created` `Rule`s in `civ1-world`.
+// `TerrainFeature`s, which are added via the `Created` `Rule`s in `civ1-world`. The start tiles are placed by
+// `tools/earth-maps/generate.py`, at least 5 apart, rather than Civilization's own.
 export const earth80x50: EarthMap = {
   width: 80,
   height: 50,
   startTiles: [
-    [American, { x: 12, y: 18 }],
+    [American, { x: 11, y: 18 }],
     [Aztec, { x: 5, y: 23 }],
-    [Babylonian, { x: 45, y: 22 }],
+    [Babylonian, { x: 46, y: 22 }],
     [Chinese, { x: 66, y: 19 }],
     [Egyptian, { x: 41, y: 24 }],
-    [English, { x: 31, y: 14 }],
+    [English, { x: 30, y: 12 }],
     [French, { x: 33, y: 16 }],
     [German, { x: 38, y: 15 }],
-    [Greek, { x: 39, y: 18 }],
-    [Indian, { x: 57, y: 26 }],
-    [Mongol, { x: 49, y: 19 }],
-    [Roman, { x: 36, y: 19 }],
+    [Greek, { x: 42, y: 19 }],
+    [Indian, { x: 57, y: 23 }],
+    [Mongol, { x: 60, y: 16 }],
+    [Roman, { x: 37, y: 20 }],
     [Russian, { x: 44, y: 12 }],
     [Zulu, { x: 42, y: 42 }],
   ],

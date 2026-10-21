@@ -3,7 +3,7 @@ from collections import Counter, deque
 from realfield import geo
 from land import is_land
 
-from civ1map import TERRAIN as CIV1, STARTS as CIV1_STARTS
+from civ1map import TERRAIN as CIV1
 CW, CH = 80, 50
 REAL_WEIGHT = 0.35
 
@@ -310,26 +310,3 @@ def draw_rivers(grid, W, H):
                     grid[j][i] = 'R'
         if grid[a[1]][a[0]] != 'O':
             grid[a[1]][a[0]] = 'R'
-
-
-
-def place_starts(grid, W, H, min_gap=3):
-    s = W / CW
-    starts = {}
-    for civ_name, (x, y) in CIV1_STARTS.items():
-        i0, j0 = int((x + 0.5) * s), int((y + 0.5) * s)
-        best = None
-        for r in range(0, 6):
-            for j in range(j0 - r, j0 + r + 1):
-                for i in range(i0 - r, i0 + r + 1):
-                    if not 0 <= j < H or grid[j][i % W] not in 'GPR':
-                        continue
-                    if any(min(abs(i % W - a), W - abs(i % W - a)) < min_gap and abs(j - b) < min_gap for a, b in starts.values()):
-                        continue
-                    d = (i - i0) ** 2 + (j - j0) ** 2 - (0.5 if grid[j][i % W] == 'R' else 0)
-                    if best is None or d < best[0]:
-                        best = (d, i % W, j)
-            if best:
-                break
-        starts[civ_name] = best[1:]
-    return starts

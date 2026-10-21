@@ -3,23 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.earth80x50 = void 0;
 const Civilizations_1 = require("@civ-clone/civ1-civilization/Civilizations");
 // Civilization's own Earth: `MAP.PIC` converted using `civ1-asset-extractor` (see `generateEarthMap.ts`), without the
-// `TerrainFeature`s, which are added via the `Created` `Rule`s in `civ1-world`.
+// `TerrainFeature`s, which are added via the `Created` `Rule`s in `civ1-world`. The start tiles are placed by
+// `tools/earth-maps/generate.py`, at least 5 apart, rather than Civilization's own.
 exports.earth80x50 = {
     width: 80,
     height: 50,
     startTiles: [
-        [Civilizations_1.American, { x: 12, y: 18 }],
+        [Civilizations_1.American, { x: 11, y: 18 }],
         [Civilizations_1.Aztec, { x: 5, y: 23 }],
-        [Civilizations_1.Babylonian, { x: 45, y: 22 }],
+        [Civilizations_1.Babylonian, { x: 46, y: 22 }],
         [Civilizations_1.Chinese, { x: 66, y: 19 }],
         [Civilizations_1.Egyptian, { x: 41, y: 24 }],
-        [Civilizations_1.English, { x: 31, y: 14 }],
+        [Civilizations_1.English, { x: 30, y: 12 }],
         [Civilizations_1.French, { x: 33, y: 16 }],
         [Civilizations_1.German, { x: 38, y: 15 }],
-        [Civilizations_1.Greek, { x: 39, y: 18 }],
-        [Civilizations_1.Indian, { x: 57, y: 26 }],
-        [Civilizations_1.Mongol, { x: 49, y: 19 }],
-        [Civilizations_1.Roman, { x: 36, y: 19 }],
+        [Civilizations_1.Greek, { x: 42, y: 19 }],
+        [Civilizations_1.Indian, { x: 57, y: 23 }],
+        [Civilizations_1.Mongol, { x: 60, y: 16 }],
+        [Civilizations_1.Roman, { x: 37, y: 20 }],
         [Civilizations_1.Russian, { x: 44, y: 12 }],
         [Civilizations_1.Zulu, { x: 42, y: 42 }],
     ],
