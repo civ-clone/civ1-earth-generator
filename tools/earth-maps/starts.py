@@ -4,7 +4,8 @@ Start tiles for every civilization with an Earth start, Civilization's own 14 an
 
 Each civilization starts from its real capital, found on the original map through the warp. Its start is the
 Grassland, Plains or River tile nearby that keeps every start at least MIN_GAP tiles apart (straight-line, wrapping east
-to west) and moves it least, favouring good land around the city. At 5 apart, two capitals share none of their 21 city
+to west). Among those it moves little, trading a tile or two of distance for good land around the city; placing is
+greedy over TRIES seeded orders, keeping the cheapest, so it's a good placement rather than a proven best one. At 5 apart, two capitals share none of their 21 city
 tiles.
 """
 import math
@@ -14,7 +15,7 @@ from realfield import LAT, STEP
 
 MIN_GAP = 5
 REACH = 6  # how far from its capital a start may move, in tiles of the map being placed
-TRIES = 1500  # orders tried, seeded, keeping the one that moves starts least
+TRIES = 1500  # orders tried, seeded, keeping the cheapest
 
 # (civilization, package, capital, (lat, lon))
 CAPITALS = [

@@ -35,7 +35,8 @@ The original map sets the shape and the terrain. Real coastlines only refine the
 - `generate.py` applies hand edits (`OVERRIDES`) on top and writes the maps.
 - `starts.py` places the start tiles of all 26 civilizations with an Earth start together on each map: Civilization's
   own 14, and the 12 of civ1-world-civilizations (civ-clone/web-renderer#466). Each starts from its real capital
-  (`CAPITALS`), found on the original map through the warp, and moves to the Grassland, Plains or River tile nearby
-  that keeps every start at least 5 tiles from every other, so no two capitals share a city tile. The 14 are written
+  (`CAPITALS`), found on the original map through the warp, and moves to a Grassland, Plains or River tile nearby
+  that keeps every start at least 5 tiles from every other, so no two capitals share a city tile. It moves little,
+  trading a tile or two for good land around the city. The 14 are written
   to `Maps/*.ts`; the 12 to `world-civilizations.json`, which civ1-world-civilizations' start tiles are copied from.
   Placing them together means the 14 are spread out with or without the plugin.
