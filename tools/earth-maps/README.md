@@ -1,7 +1,8 @@
 # Earth maps
 
 `generate.py` scales Civilization's own 80 x 50 Earth (`Maps/Earth80x50.ts`) up to the larger sizes New Game offers,
-and writes `Maps/Earth104x65.ts` and `Maps/Earth128x80.ts`. It needs Python 3 and nothing else.
+writes `Maps/Earth104x65.ts` and `Maps/Earth128x80.ts`, and places every civilization's start tile on all three maps.
+It needs Python 3 and nothing else.
 
 ```sh
 cd tools/earth-maps
@@ -10,7 +11,8 @@ python3 generate.py
 cd ../.. && npm run build
 ```
 
-It also writes `preview.png`: the original map and each new one, with the start tiles marked.
+It also writes `preview.png`: the original map and each new one, with the start tiles marked (Civilization's own in
+red, civ1-world-civilizations' in orange).
 
 ## How it works
 
@@ -30,6 +32,10 @@ The original map sets the shape and the terrain. Real coastlines only refine the
     regions aren't stretched blocks. Rivers are drawn again as connected lines.
   - **Islands the original leaves out** (`OMISSIONS`: Sri Lanka, New Zealand, Ireland, Sicily...) are shaped from the
     real coastline and moved into open sea if they would touch other land.
-  - **Start tiles:** the original's, scaled up and moved to the nearest Grassland, Plains or River at least three tiles
-    from another.
 - `generate.py` applies hand edits (`OVERRIDES`) on top and writes the maps.
+- `starts.py` places the start tiles of all 26 civilizations with an Earth start together on each map: Civilization's
+  own 14, and the 12 of civ1-world-civilizations (civ-clone/web-renderer#466). Each starts from its real capital
+  (`CAPITALS`), found on the original map through the warp, and moves to the Grassland, Plains or River tile nearby
+  that keeps every start at least 5 tiles from every other, so no two capitals share a city tile. The 14 are written
+  to `Maps/*.ts`; the 12 to `world-civilizations.json`, which civ1-world-civilizations' start tiles are copied from.
+  Placing them together means the 14 are spread out with or without the plugin.

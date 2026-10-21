@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
 Generates the larger Earth maps (`Maps/Earth104x65.ts`, `Maps/Earth128x80.ts`) from Civilization's own 80 x 50 map,
-and draws `preview.png` with each map and its start tiles. See README.md.
+places every civilization's start tile on all three maps (`starts.py`), and draws `preview.png` with each map and its
+start tiles. Civilization's own 14 starts go in `Maps/*.ts`; civ1-world-civilizations' go in
+`world-civilizations.json`, which that package's start tiles are copied from. See README.md.
 """
+import json
 import os
+import re
 import sys
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -12,9 +16,10 @@ if not os.path.exists('ne_50m_land.geojson'):
     sys.exit('ne_50m_land.geojson is missing: see README.md.')
 
 from collections import Counter
-from civ1map import TERRAIN as CIV1, STARTS as CIV1_STARTS
+from civ1map import TERRAIN as CIV1
 from png import PAL, write_png
-from upscale import upscale, draw_rivers, place_starts
+from starts import CAPITALS, place
+from upscale import upscale, draw_rivers
 
 SIZES = [(104, 65), (128, 80)]
 
@@ -40,8 +45,16 @@ def stats(rows):
         f"{k}:{v / land:.1%}" for k, v in counts.most_common() if k != 'O')
 
 
+CIV1_CIVILIZATIONS = [name for name, package, _, _ in CAPITALS if package == 'civ1']
+WORLD_CIVILIZATIONS = [name for name, package, _, _ in CAPITALS if package == 'world']
+
+
+def start_lines(starts):
+    return [f'    [{name}, {{ x: {starts[name][0]}, y: {starts[name][1]} }}],' for name in CIV1_CIVILIZATIONS]
+
+
 def typescript(width, height, rows, starts):
-    names = list(starts)
+    names = CIV1_CIVILIZATIONS
     lines = [
         'import {',
         *[f'  {name},' for name in names],
@@ -53,7 +66,7 @@ def typescript(width, height, rows, starts):
         f'  width: {width},',
         f'  height: {height},',
         '  startTiles: [',
-        *[f'    [{name}, {{ x: {x}, y: {y} }}],' for name, (x, y) in starts.items()],
+        *start_lines(starts),
         '  ],',
         '  terrain: `' + '\n'.join(rows) + '\n`,',
         '};',
@@ -64,7 +77,18 @@ def typescript(width, height, rows, starts):
     return '\n'.join(lines)
 
 
-panels = [(CIV1, CIV1_STARTS)]
+world = {}
+
+# The original map keeps its terrain; only its start tiles are placed again.
+starts = place(CIV1)
+path = os.path.join('..', '..', 'Maps', 'Earth80x50.ts')
+source = open(path).read()
+source = re.sub(r'  startTiles: \[\n(?:    \[.*\n)+  \],', lambda _: '  startTiles: [\n' + '\n'.join(start_lines(starts)) + '\n  ],', source)
+with open(path, 'w') as file:
+    file.write(source)
+
+panels = [(CIV1, starts)]
+world['80x50'] = {name: list(starts[name]) for name in WORLD_CIVILIZATIONS}
 
 for width, height in SIZES:
     grid, _, _, added = upscale(width, height)
@@ -74,14 +98,19 @@ for width, height in SIZES:
         grid[y][x] = terrain
 
     rows = [''.join(row) for row in grid]
-    starts = place_starts(rows, width, height)
+    starts = place(rows)
 
     with open(os.path.join('..', '..', 'Maps', f'Earth{width}x{height}.ts'), 'w') as file:
         file.write(typescript(width, height, rows, starts))
 
     panels.append((rows, starts))
+    world[f'{width}x{height}'] = {name: list(starts[name]) for name in WORLD_CIVILIZATIONS}
     print(f'{width} x {height}: {stats(rows)}')
     print(f'  islands added: {", ".join(f"{name} ({len(tiles)})" for name, tiles in added.items())}')
+
+with open('world-civilizations.json', 'w') as file:
+    json.dump(world, file, indent=2)
+    file.write('\n')
 
 # one panel per map, the original first, start tiles in red
 PW, PH, GAP = 896, 560, 12
@@ -98,7 +127,7 @@ for n, (rows, starts) in enumerate(panels):
         for x in range(PW):
             image[oy + y][ox + x] = PAL[row[x * W // PW]]
 
-    for i, j in starts.values():
+    for name, (i, j) in starts.items():
         cx, cy = ox + int((i + .5) * PW / W), oy + int((j + .5) * PH / H)
 
         for dy in range(-4, 5):
@@ -106,6 +135,6 @@ for n, (rows, starts) in enumerate(panels):
                 d = dx * dx + dy * dy
 
                 if d <= 16:
-                    image[cy + dy][cx + dx] = (230, 30, 30) if d <= 8 else (255, 255, 255)
+                    image[cy + dy][cx + dx] = ((230, 30, 30) if name in CIV1_CIVILIZATIONS else (255, 140, 0)) if d <= 8 else (255, 255, 255)
 
 write_png('preview.png', SW, SH, image)

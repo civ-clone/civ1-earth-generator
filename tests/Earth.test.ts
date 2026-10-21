@@ -93,12 +93,25 @@ describe('Earth', (): void => {
     });
   });
 
-  earthMaps.slice(1).forEach((map) => {
+  earthMaps.forEach((map) => {
     it(`starts every civilization on Grassland, Plains or River at ${map.width} x ${map.height}`, (): void => {
       expect(map.startTiles).to.have.lengthOf(14);
 
       map.startTiles.forEach(([, { x, y }]) =>
         expect('GPR').to.include(terrainAt(map, x, y))
+      );
+    });
+
+    // At 5 apart, no two capitals share any of their 21 city tiles.
+    it(`starts every civilization at least 5 tiles from any other at ${map.width} x ${map.height}`, (): void => {
+      map.startTiles.forEach(([, a], i) =>
+        map.startTiles.slice(i + 1).forEach(([, b]) => {
+          const dx = Math.abs(a.x - b.x);
+
+          expect(
+            Math.hypot(Math.min(dx, map.width - dx), a.y - b.y)
+          ).to.be.at.least(5);
+        })
       );
     });
   });
