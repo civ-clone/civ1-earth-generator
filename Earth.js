@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Earth = void 0;
+exports.Earth = exports.earthGeneratorId = void 0;
 const Arctic_1 = require("@civ-clone/base-terrain-arctic/Arctic");
 const Desert_1 = require("@civ-clone/base-terrain-desert/Desert");
 const Forest_1 = require("@civ-clone/base-terrain-forest/Forest");
@@ -30,6 +30,11 @@ const terrainLookup = {
     T: Tundra_1.default,
 };
 /**
+ * What `Earth#id()` says, and so what a world made from it records (`World#generatorId()`): how a rule tells a game on
+ *  the Earth, before or after a load.
+ */
+exports.earthGeneratorId = 'earth';
+/**
  * The Earth, in each size `earthMaps` has. A size without a map of its own gets the original 80 x 50 map, so
  * `width()` and `height()` report the size actually generated.
  */
@@ -38,6 +43,9 @@ class Earth extends Generator_1.default {
         const map = (0, EarthMaps_1.getEarthMap)(width, height);
         super(map.height, map.width, options);
         this._map = map;
+    }
+    id() {
+        return exports.earthGeneratorId;
     }
     async generate() {
         return Array.from(this._map.terrain.replace(/\n/g, '')).map((terrainId) => new terrainLookup[terrainId]());

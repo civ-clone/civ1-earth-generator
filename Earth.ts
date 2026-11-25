@@ -47,6 +47,12 @@ const terrainLookup: TerrainLookup = {
 };
 
 /**
+ * What `Earth#id()` says, and so what a world made from it records (`World#generatorId()`): how a rule tells a game on
+ *  the Earth, before or after a load.
+ */
+export const earthGeneratorId = 'earth';
+
+/**
  * The Earth, in each size `earthMaps` has. A size without a map of its own gets the original 80 x 50 map, so
  * `width()` and `height()` report the size actually generated.
  */
@@ -63,6 +69,10 @@ export class Earth extends Generator {
     super(map.height, map.width, options);
 
     this._map = map;
+  }
+
+  id(): string {
+    return earthGeneratorId;
   }
 
   async generate(): Promise<Terrain[]> {
