@@ -1,6 +1,6 @@
 import { earthMaps, getEarthMap } from '../EarthMaps';
 import EarthStartTile from '../EarthStartTile';
-import Earth from '../Earth';
+import Earth, { earthGeneratorId } from '../Earth';
 import EarthMap from '../EarthMap';
 import World from '@civ-clone/core-world/World';
 import { expect } from 'chai';
@@ -49,6 +49,12 @@ const rows = (map: EarthMap): string[] => map.terrain.split('\n').slice(0, -1),
   };
 
 describe('Earth', (): void => {
+  it("says it's the Earth, for the world made from it to record", (): void => {
+    expect(new Earth().id()).equal(earthGeneratorId);
+    expect(earthGeneratorId).equal('earth');
+    expect(new World(new Earth()).generatorId()).equal('earth');
+  });
+
   it('comes in the original size and the two larger New Game sizes', (): void => {
     expect(earthMaps.map(({ width, height }) => [width, height])).to.eql([
       [80, 50],
